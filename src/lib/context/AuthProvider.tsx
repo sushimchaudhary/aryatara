@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import AuthContext from "./AuthContext";
 import { IUser, ICredentials } from "../../types/authType";
 import Cookies from "js-cookie";
-import { UserServices } from "@/services/authServices";
+import { UserServices } from "@/services/userServices";
+import AuthContext from "./AuthContext";
 
 export const AuthProvider = ({
   children,
