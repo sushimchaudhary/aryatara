@@ -2,12 +2,14 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 interface Project {
   id: number;
   image: string;
   title: string;
   description: string;
+  url?: string | null;
 }
 
 export default function ProjectCard({
@@ -42,13 +44,30 @@ export default function ProjectCard({
       </div>
 
       {/* Content */}
-      <div className="p-2">
-        <h3 className="text-xl font-bold text-blue-950 mb-2 line-clamp-1 group-hover:text-green-700 transition-colors duration-200">
+      <div className="p-4 flex flex-col h-32">
+       
+        <h3 className="text-xl font-bold text-blue-950 mb-1 line-clamp-1 group-hover:text-green-700 transition-colors duration-200">
           {project.title}
         </h3>
-        <p className="text-sm text-gray-600 line-clamp-2 leading-relaxed">
+        <p className="text-sm text-gray-600 line-clamp-2 leading-relaxed flex-grow">
           {project.description}
         </p>
+        {project.url && (
+          <div className="flex justify-end mt-2">
+            <Link
+              href={
+                project.url.startsWith("http")
+                  ? project.url
+                  : `https://${project.url}`
+              }
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm font-bold text-green-600 hover:text-green-800 transition-colors"
+            >
+              View Link →
+            </Link>
+          </div>
+        )}
       </div>
     </motion.div>
   );

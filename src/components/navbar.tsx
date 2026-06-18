@@ -22,7 +22,7 @@ const NAV_LINKS = [
     href: "#",
     children: [{ label: "Company Introduction", href: "/company-information" }],
   },
-  { label: "CHAIRMAN'S MESSAGE", href: "/chairman" },
+  { label: "CHAIRMAN'S MESSAGE", href: "/chairman-message" },
   { label: "PROJECTS", href: "/projects" },
   { label: "CAREER", href: "/career" },
   { label: "CONTACT", href: "/contact" },

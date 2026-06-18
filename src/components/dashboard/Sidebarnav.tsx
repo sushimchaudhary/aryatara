@@ -65,7 +65,7 @@ const MENU_GROUPS: MenuGroup[] = [
   {
     groupKey: "dashboard",
     items: [
-      { icon: LayoutDashboard, labelKey: "Dashboard", href: "/cms/dashboard" },
+      { icon: LayoutDashboard, labelKey: "Dashboard", href: "/cms" },
     ],
   },
   {

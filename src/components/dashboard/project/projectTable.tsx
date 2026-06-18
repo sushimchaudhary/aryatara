@@ -67,11 +67,13 @@ export default function ProjectTable({ onEdit, refreshTrigger, searchQuery = "" 
                 <th className="px-4 py-1.5 text-[11px] font-bold text-[#8094ae] uppercase">Image</th>
                 <th className="px-4 py-1.5 text-[11px] font-bold text-[#8094ae] uppercase">Title</th>
                 <th className="px-4 py-1.5 text-[11px] font-bold text-[#8094ae] uppercase">Description</th>
+                 <th className="px-4 py-1.5 text-[11px] font-bold text-[#8094ae] uppercase">Link</th>
+
                 <th className="px-4 py-1.5 text-[11px] font-bold text-[#8094ae] uppercase text-right w-24">Action</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
-              {loading ? <TableLoadingSkeleton rows={5} cols={6} /> : paginated.length === 0 ? (
+              {loading ? <TableLoadingSkeleton rows={5} cols={7} /> : paginated.length === 0 ? (
                 <tr><td colSpan={6} className="text-center py-16"><div className="flex flex-col items-center gap-2">{searchQuery ? <SearchX size={32} className="text-rose-300" /> : <Inbox size={32} className="text-gray-200" />}<span className="text-sm font-bold text-[#364a63]">{searchQuery ? "No results." : "No projects yet."}</span></div></td></tr>
               ) : paginated.map((item, index) => {
                 const isSelected = selectedIds.includes(item.id);
@@ -98,6 +100,21 @@ export default function ProjectTable({ onEdit, refreshTrigger, searchQuery = "" 
                     </td>
                     <td className="px-4 py-1.5"><span className="text-[11px] font-bold text-[#364a63]">{item.title}</span></td>
                     <td className="px-4 py-1.5"><span className="text-[10px] text-[#8094ae] line-clamp-2 max-w-xs">{item.description}</span></td>
+<td className="px-4 py-1.5">
+  {item.url ? (
+    <a
+      href={item.url.startsWith("http") ? item.url : `https://${item.url}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-[10px] text-blue-600 hover:text-blue-800 hover:underline font-medium truncate max-w-[150px] block"
+      title={item.url}
+    >
+      {item.url}
+    </a>
+  ) : (
+    <span className="text-[10px] text-gray-300 italic">No Link</span>
+  )}
+</td>
                     <td className="px-4 py-1.5 text-right">
                       <div className="flex justify-end gap-1">
                         <button onClick={() => onEdit(item)} className="p-1.5 text-blue-500 hover:bg-blue-50 rounded active:scale-90 transition-all"><Pencil size={12} /></button>

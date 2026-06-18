@@ -19,7 +19,7 @@ export function ProjectForm({ initialData, onSuccess, onClose, isOpen }: any) {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const form = useForm({
-    defaultValues: { title: "", description: "", image: null as any },
+    defaultValues: { title: "", description: "",url: "", image: null as any },
   });
   const handleClose = () => {
     form.reset();
@@ -34,11 +34,12 @@ export function ProjectForm({ initialData, onSuccess, onClose, isOpen }: any) {
         form.reset({
           title: initialData.title || "",
           description: initialData.description || "",
+          url: initialData.url || "" ,
           image: null,
         });
       } else {
         setImagePreview(null);
-        form.reset({ title: "", description: "", image: null });
+        form.reset({ title: "", description: "",url: "", image: null });
       }
     }
   }, [initialData, isOpen]);
@@ -59,6 +60,7 @@ export function ProjectForm({ initialData, onSuccess, onClose, isOpen }: any) {
       const fd = new FormData();
       fd.append("title", values.title);
       fd.append("description", values.description);
+      fd.append("url", values.url || "");
       if (values.image instanceof File) fd.append("image", values.image);
       if (isUpdate) {
         await ProjectsServices.updateDetails(initialData.id, fd);
@@ -104,7 +106,7 @@ export function ProjectForm({ initialData, onSuccess, onClose, isOpen }: any) {
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
-                className="px-6 py-4 space-y-4"
+                className="px-6 py-4 space-y-2"
               >
                 <div className="flex flex-col items-center pb-3 border-b border-dashed border-gray-200">
                   <div
@@ -172,6 +174,22 @@ export function ProjectForm({ initialData, onSuccess, onClose, isOpen }: any) {
                     )}
                   />
                 </div>
+
+                <Controller
+  control={form.control}
+  name="url"
+  render={({ field }) => (
+    <FormItem>
+      <ThemedInput
+        label="Project URL"
+        icon={<FileText size={12} />} 
+        placeholder="https://example.com"
+        {...field}
+      />
+      <FormMessage className="text-[10px]" />
+    </FormItem>
+  )}
+/>
                 <div className="flex justify-end gap-3 pt-2 border-t border-gray-100">
                   <CancelButton onClick={handleClose} disabled={loading} />
                   <ThemedButton type="submit" size="sm" disabled={loading}>
