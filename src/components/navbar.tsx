@@ -10,9 +10,9 @@ import { useOrganization } from "@/lib/hooks/useOrganization";
 const LANGUAGES = [
   { code: "ne", label: "नेपाली" },
   { code: "en", label: "English" },
-  { code: "ja", label: "जापानी" },
-  { code: "hi", label: "हिन्दी" },
-  { code: "ko", label: "कोरियन" },
+  { code: "ja", label: "Japnese" },
+  { code: "hi", label: "Hindi" },
+  { code: "ko", label: "Korean" },
 ];
 
 const NAV_LINKS = [
@@ -25,6 +25,7 @@ const NAV_LINKS = [
   { label: "CHAIRMAN'S MESSAGE", href: "/chairman-message" },
   { label: "PROJECTS", href: "/projects" },
   { label: "CAREER", href: "/career" },
+   { label: "LEGAL DOCS", href: "/legal-docs" },
   { label: "CONTACT", href: "/contact" },
 ];
 
@@ -95,7 +96,7 @@ export default function Navbar() {
   return (
     <div className="flex flex-col w-full max-w-7xl mx-auto">
       <nav className="sticky top-0 z-50 border-b border-gray-200">
-        <div className="px-4 md:px-10 py-3 flex justify-between items-center gap-4">
+        <div className="px-4 md:px-10 py-2 flex justify-between items-center gap-4">
 
           {/* Logo */}
           <Link href="/" className="flex items-center gap-1 shrink-0 select-none">
@@ -103,7 +104,7 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop nav links */}
-          <ul className="hidden lg:flex items-center gap-4 font-bold text-green-800 text-md">
+          <ul className="hidden lg:flex items-center gap-2 font-bold text-green-800 text-sm">
             {NAV_LINKS.map((link) =>
               link.children ? (
                 <li key={link.label} className="relative group" ref={aboutRef}>

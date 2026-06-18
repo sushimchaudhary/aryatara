@@ -57,7 +57,7 @@ export default function ContactSection() {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.8 }}
-      className="py-18 md:px-12 px-4"
+      className="py-8 md:px-12 px-4"
     >
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-5 items-center">
 

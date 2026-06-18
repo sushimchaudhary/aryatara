@@ -9,6 +9,14 @@ import TableLoadingSkeleton from "../tableLoadingSkeleton";
 import ConfirmModal from "@/components/delete/confirmModel";
 
 const PAGE_SIZE = 20;
+
+// ── Strip HTML tags → plain text for table preview ────────────────────────────
+function stripHtml(html: string): string {
+  if (!html) return "";
+  return html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+}
+
+
 const STATUS_BADGE: Record<string, string> = { DRAFT: "bg-gray-100 text-gray-500", HIRING: "bg-green-100 text-green-600", HIRED: "bg-blue-100 text-blue-600" };
 
 export default function JobTable({ onEdit, onViewApplications, refreshTrigger, searchQuery = "" }: any) {
@@ -94,7 +102,11 @@ const handleConfirmDelete = async () => {
                     <td className="px-4 py-1.5 text-center"><input type="checkbox" checked={isSelected} onChange={() => handleSelectOne(item.slug)} className="rounded border-gray-300 cursor-pointer" /></td>
                     <td className="px-4 py-1.5 text-[10px] text-[#526484]">{(currentPage - 1) * PAGE_SIZE + index + 1}.</td>
                     <td className="px-4 py-1.5"><span className="text-[11px] font-bold text-[#364a63]">{item.name}</span></td>
-                    <td className="px-4 py-1.5"><span className="text-[11px] font-bold text-[#364a63]">{item.description}</span></td>
+                    <td className="px-4 py-1.5 max-w-[200px]">
+                      <p className="text-[11px] font-bold text-[#364a63] line-clamp-2 overflow-hidden">
+                        {stripHtml(item.description)}
+                      </p>
+                    </td>
                     <td className="px-4 py-1.5"><span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${STATUS_BADGE[item.status] || "bg-gray-100 text-gray-500"}`}>{item.status}</span></td>
                     <td className="px-4 py-1.5"><span className="text-[10px] text-[#8094ae]">{new Date(item.created_at).toLocaleDateString()}</span></td>
                     <td className="px-4 py-1.5 text-right">

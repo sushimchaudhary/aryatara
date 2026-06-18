@@ -10,6 +10,7 @@ import { CancelButton } from "@/components/ui/CancleButton";
 import { useTheme } from "@/lib/context/ThemeContext";
 import { toast } from "sonner";
 import { JobServices } from "@/services/jobServices";
+import CKEditorField from "@/components/CkEditorfield";
 
 const STATUS_OPTIONS = [
   { value: "DRAFT", label: "Draft" },
@@ -21,9 +22,11 @@ export function JobForm({ initialData, onSuccess, onClose, isOpen }: any) {
   const { primaryColor } = useTheme();
   const isUpdate = !!initialData;
   const [loading, setLoading] = useState(false);
+
   const form = useForm({
     defaultValues: { name: "", description: "", status: "DRAFT" },
   });
+
   const handleClose = () => {
     form.reset();
     onClose();
@@ -43,39 +46,47 @@ export function JobForm({ initialData, onSuccess, onClose, isOpen }: any) {
     }
   }, [initialData, isOpen]);
 
-const onSubmit = async (values: any) => {
+  const onSubmit = async (values: any) => {
     setLoading(true);
     try {
       if (isUpdate) {
-        await JobServices.updateDetails(initialData.slug, values); 
+        await JobServices.updateDetails(initialData.slug, values);
         toast.success("Job updated!");
       } else {
         await JobServices.createDetails(values);
         toast.success("Job created!");
       }
-      onSuccess?.(); 
+      onSuccess?.();
       handleClose();
-    } catch (err: any) { 
+    } catch (err: any) {
       toast.error(JobServices.parseError(err));
-    } finally { 
-      setLoading(false); 
+    } finally {
+      setLoading(false);
     }
-};
+  };
 
   return (
     <>
+      {/* Backdrop */}
       <div
         onClick={handleClose}
-        className={`fixed inset-0 z-[100] bg-slate-900/40 backdrop-blur-sm transition-opacity duration-300 ${isOpen ? "opacity-100 visible" : "opacity-0 invisible"}`}
+        className={`fixed inset-0 z-[100] bg-slate-900/40 backdrop-blur-sm transition-opacity duration-300 ${
+          isOpen ? "opacity-100 visible" : "opacity-0 invisible"
+        }`}
       />
+
+      {/* Modal */}
       <div
-        className={`fixed inset-0 z-[101] flex items-center justify-center p-4 transition-all duration-300 ${isOpen ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"}`}
+        className={`fixed inset-0 z-[101] flex items-center justify-center p-4 transition-all duration-300 ${
+          isOpen ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"
+        }`}
       >
-        <div className="w-full max-w-lg bg-white rounded shadow-md border border-gray-200 overflow-hidden font-mukta">
+        <div className="w-full max-w-2xl bg-white rounded shadow-md border border-gray-200 overflow-hidden font-mukta max-h-[92vh] flex flex-col">
           <ConfigProvider
             theme={{ token: { colorPrimary: primaryColor, borderRadius: 4 } }}
           >
-            <div className="bg-white px-4 py-3 border-b border-gray-100 flex justify-between items-center">
+            {/* Header */}
+            <div className="bg-white px-4 py-3 border-b border-gray-100 flex justify-between items-center flex-shrink-0">
               <h2 className="text-sm font-bold text-gray-800 flex items-center gap-2">
                 <Briefcase size={15} style={{ color: primaryColor }} />
                 {isUpdate ? "Edit Job Post" : "New Job Post"}
@@ -87,75 +98,83 @@ const onSubmit = async (values: any) => {
                 <X size={20} />
               </button>
             </div>
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="px-6 py-4 space-y-4"
-              >
-                <Controller
-                  control={form.control}
-                  name="name"
-                  render={({ field }) => (
-                    <FormItem>
-                      <ThemedInput
-                        label="Job Title"
-                        icon={<Briefcase size={12} />}
-                        placeholder="Enter job title"
-                        {...field}
-                      />
-                      <FormMessage className="text-[10px]" />
-                    </FormItem>
-                  )}
-                />
-                <div className="w-full space-y-1">
-                  <label className="text-[11px] font-medium text-gray-400 block">
-                    Status
-                  </label>
+
+            {/* Scrollable body */}
+            <div className="overflow-y-auto flex-1 scrollbar-hide">
+              <Form {...form}>
+                <form
+                  onSubmit={form.handleSubmit(onSubmit)}
+                  className="px-6 py-4 space-y-4"
+                >
+                  {/* Job Title */}
                   <Controller
                     control={form.control}
-                    name="status"
+                    name="name"
                     render={({ field }) => (
-                      <Select
-                        {...field}
-                        options={STATUS_OPTIONS}
-                        style={{ width: "100%" }}
-                        size="middle"
-                      />
+                      <FormItem>
+                        <ThemedInput
+                          label="Job Title"
+                          icon={<Briefcase size={12} />}
+                          placeholder="Enter job title"
+                          {...field}
+                        />
+                        <FormMessage className="text-[10px]" />
+                      </FormItem>
                     )}
                   />
-                </div>
-                <div className="w-full space-y-1">
-                  <label className="text-[11px] font-medium text-gray-400 block">
-                    Description / Requirements
-                  </label>
+
+                  {/* Status */}
+                  <div className="w-full space-y-1">
+                    <label className="text-[11px] font-medium text-gray-400 block">
+                      Status
+                    </label>
+                    <Controller
+                      control={form.control}
+                      name="status"
+                      render={({ field }) => (
+                        <Select
+                          {...field}
+                          options={STATUS_OPTIONS}
+                          style={{ width: "100%" }}
+                          size="middle"
+                        />
+                      )}
+                    />
+                  </div>
+
+                  {/* Description — CKEditor */}
                   <Controller
                     control={form.control}
                     name="description"
-                    render={({ field }) => (
-                      <textarea
-                        {...field}
-                        rows={5}
+                    render={({ field, fieldState }) => (
+                      <CKEditorField
+                        label="Description / Requirements"
+                        value={field.value}
+                        onChange={field.onChange}
                         placeholder="Job responsibilities, requirements, etc..."
-                        className="w-full rounded border border-gray-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-1 resize-none"
+                        height={260}
+                        error={fieldState.error?.message}
                       />
                     )}
                   />
-                </div>
-                <div className="flex justify-end gap-3 pt-2 border-t border-gray-100">
-                  <CancelButton onClick={handleClose} disabled={loading} />
-                  <ThemedButton type="submit" size="sm" disabled={loading}>
-                    <div className="flex items-center gap-2">
-                      {loading ? (
-                        <Loader2 size={12} className="animate-spin" />
-                      ) : (
-                        <Save size={12} />
-                      )}
-                      <span>{isUpdate ? "Update" : "Create"}</span>
-                    </div>
-                  </ThemedButton>
-                </div>
-              </form>
-            </Form>
+
+                  {/* Footer */}
+                  <div className="flex justify-end gap-3 pt-2 border-t border-gray-100 sticky bottom-0 bg-white pb-1">
+                    <CancelButton onClick={handleClose} disabled={loading} />
+                    <ThemedButton type="submit" size="sm" disabled={loading}>
+                      <div className="flex items-center gap-2">
+                        {loading ? (
+                          <Loader2 size={12} className="animate-spin" />
+                        ) : (
+                          <Save size={12} />
+                        )}
+                        <span>{isUpdate ? "Update" : "Create"}</span>
+                      </div>
+                    </ThemedButton>
+                  </div>
+                </form>
+              </Form>
+            </div>
           </ConfigProvider>
         </div>
       </div>

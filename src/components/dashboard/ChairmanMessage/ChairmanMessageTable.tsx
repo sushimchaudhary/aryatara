@@ -18,6 +18,14 @@ import ConfirmModal from "@/components/delete/confirmModel";
 import { ChairmanMessageServices } from "@/services/chairmanmessageServices";
 
 const PAGE_SIZE = 20;
+
+// ── Strip HTML tags → plain text for table preview ────────────────────────────
+function stripHtml(html: string): string {
+  if (!html) return "";
+  return html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+}
+
+
 export default function ChairmanMessageTable({
   onEdit,
   refreshTrigger,
@@ -182,7 +190,7 @@ export default function ChairmanMessageTable({
                       </td>
                       <td className="px-4 py-2">
                         <span className="text-[10px] text-[#8094ae] line-clamp-2 max-w-sm">
-                          {item.description}
+                          {stripHtml(item.description)}
                         </span>
                       </td>
                       <td className="px-4 py-1.5 text-right">

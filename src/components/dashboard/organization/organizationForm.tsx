@@ -142,7 +142,7 @@ export default function OrganizationForm({ initialData, onSuccess, onClose, isOp
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col flex-1 min-h-0 ">
 
-                <div className="overflow-y-auto flex-1 px-6 py-4 space-y-4">
+                <div className="overflow-y-auto flex-1 px-6 py-4 space-y-4 scrollbar-hide">
                   {/* Logo */}
                   <div className="flex flex-col items-center pb-3 border-b border-dashed border-gray-200">
                     <div

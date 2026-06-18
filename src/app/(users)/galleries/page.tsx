@@ -410,19 +410,7 @@ export default function GalleryPage() {
 
   return (
     <div className="max-w-7xl mx-auto">
-      {/* Hero */}
-<section className="py-16 bg-gray-800 text-white text-center">
-          <div className="">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">Photo Gallery</h1>
-            <div className="flex items-center justify-center gap-2 text-sm md:text-base">
-              <span className="hover:text-green-400 cursor-pointer">
-                <Link href={'/'} >Home </Link></span>
-              <span>/</span>
-              
-              <span className="text-green-500 font-semibold">Gallery</span>
-            </div>
-          </div>
-        </section>
+
 
       <section className="px-4 md:px-12 py-14">
         {/* Section header */}

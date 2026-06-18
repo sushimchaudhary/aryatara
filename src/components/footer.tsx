@@ -1,68 +1,63 @@
 "use client";
 
 import { useOrganization } from "@/lib/hooks/useOrganization";
-import { MapPin, Phone, Mail } from "lucide-react";
+import { MapPin, Mail } from "lucide-react";
 import Link from "next/link";
 import { FaFacebookF, FaInstagram, FaLinkedinIn } from "react-icons/fa";
 import { MdPhoneInTalk, MdLocalPhone } from "react-icons/md";
+import { useEffect, useState } from "react";
+import { ProjectsServices } from "@/services/projectsServices";
 
 const TwitterIcon = ({ size }: { size?: number }) => (
-  <svg
-    viewBox="0 0 24 24"
-    fill="currentColor"
-    style={{ width: size, height: size }}
-  >
+  <svg viewBox="0 0 24 24" fill="currentColor" style={{ width: size, height: size }}>
     <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
   </svg>
 );
 
 export default function Footer() {
   const { organization } = useOrganization();
+  const [projects, setProjects] = useState<{ title: string; url: string }[]>([]);
+
+  useEffect(() => {
+    ProjectsServices.getDetails()
+      .then((data: any[]) => {
+        const list = Array.isArray(data) ? data : [];
+        setProjects(
+          list.map((p) => ({
+            title: p.title,
+            url: p.url || "#",
+          }))
+        );
+      })
+      .catch(() => setProjects([]));
+  }, []);
 
   const SOCIAL_LINKS = [
-    {
-      Icon: TwitterIcon,
-      href: organization?.twitter_url || "#",
-      label: "Twitter",
-    },
-    {
-      Icon: FaFacebookF,
-      href: organization?.facebook_url || "#",
-      label: "Facebook",
-    },
-    {
-      Icon: FaInstagram,
-      href: organization?.instagram_url || "#",
-      label: "Instagram",
-    },
-    {
-      Icon: FaLinkedinIn,
-      href: organization?.linkdin_url || "#",
-      label: "LinkedIn",
-    },
+    { Icon: TwitterIcon,  href: organization?.twitter_url   || "#", label: "Twitter"   },
+    { Icon: FaFacebookF,  href: organization?.facebook_url  || "#", label: "Facebook"  },
+    { Icon: FaInstagram,  href: organization?.instagram_url || "#", label: "Instagram" },
+    { Icon: FaLinkedinIn, href: organization?.linkdin_url   || "#", label: "LinkedIn"  },
   ];
 
   return (
-    <div className="w-full  mx-auto">
+    <div className="w-full mx-auto">
       <footer className="bg-[#007f35] text-white pt-16 pb-8 px-4 md:px-12">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+
+          {/* ── Organization info ── */}
           <div className="space-y-4">
             <h2 className="text-2xl font-bold">
               {organization?.title ?? "Arya Tara Private Limited."}
             </h2>
-
             <div className="space-y-3 text-sm opacity-90">
-              {/* Address */}
               <p className="flex items-start gap-2">
                 <MapPin className="w-5 h-5 shrink-0" />
                 {organization?.address ?? "Indrasarowar-5, Makawanpur, Nepal"}
               </p>
 
-              {/* Phones */}
               {[
-                { val: organization?.telephone_number, icon: MdPhoneInTalk }, 
-  
-              { val: organization?.contactNo, icon: MdLocalPhone },
+                { val: organization?.telephone_number, icon: MdPhoneInTalk },
+                { val: organization?.contactNo,        icon: MdLocalPhone  },
               ]
                 .filter((item) => item.val)
                 .map((item, idx) => (
@@ -74,7 +69,6 @@ export default function Footer() {
                   </p>
                 ))}
 
-              {/* Emails */}
               {[organization?.email1, organization?.email2]
                 .filter(Boolean)
                 .map((email, idx) => (
@@ -88,7 +82,7 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Quick Links */}
+          {/* ── Quick Links ── */}
           <div className="space-y-4">
             <h3 className="text-xl font-semibold">Quick Links</h3>
             <ul className="space-y-2 text-sm">
@@ -105,22 +99,30 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Services */}
+          {/* ── Projects (dynamic) ── */}
           <div className="space-y-4">
-            <h3 className="text-xl font-semibold">Services</h3>
+            <h3 className="text-xl font-semibold">Projects</h3>
             <ul className="space-y-2 text-sm">
-              <li>
-                <Link
-                  href="/services/mount-curry"
-                  className="hover:pl-2 transition-all duration-300 flex items-center"
-                >
-                  › The Mount Curry Point
-                </Link>
-              </li>
+              {projects.length > 0 ? (
+                projects.map((p) => (
+                  <li key={p.title}>
+                    <a
+                      href={p.url.startsWith("http") ? p.url : `https://${p.url}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:pl-2 transition-all duration-300 flex items-center"
+                    >
+                      › {p.title}
+                    </a>
+                  </li>
+                ))
+              ) : (
+                <li className="opacity-60">No projects yet.</li>
+              )}
             </ul>
           </div>
 
-          {/* Follow Us */}
+          {/* ── Follow Us ── */}
           <div className="space-y-4">
             <h3 className="text-xl font-semibold">Follow Us</h3>
             <div className="flex gap-3">
@@ -140,7 +142,7 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Copyright */}
+        {/* ── Copyright ── */}
         <div className="border-t border-white/20 pt-8 text-center text-sm opacity-80">
           <p>
             © {new Date().getFullYear()}{" "}

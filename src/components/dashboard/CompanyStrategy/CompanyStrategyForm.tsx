@@ -143,7 +143,7 @@ export function CompanyStrategyForm({
             </div>
 
             {/* Scrollable body */}
-            <div className="overflow-y-auto flex-1">
+            <div className="overflow-y-auto flex-1 scrollbar-hide">
               <Form {...form}>
                 <form
                   onSubmit={form.handleSubmit(onSubmit)}

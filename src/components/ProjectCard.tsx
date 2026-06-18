@@ -36,7 +36,7 @@ export default function ProjectCard({
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             unoptimized
-            className="object-cover "
+            className="object-center "
           />
         </div>
         {/* Hover Overlay */}
@@ -44,31 +44,49 @@ export default function ProjectCard({
       </div>
 
       {/* Content */}
-      <div className="p-4 flex flex-col h-32">
-       
-        <h3 className="text-xl font-bold text-blue-950 mb-1 line-clamp-1 group-hover:text-green-700 transition-colors duration-200">
-          {project.title}
-        </h3>
-        <p className="text-sm text-gray-600 line-clamp-2 leading-relaxed flex-grow">
-          {project.description}
-        </p>
-        {project.url && (
-          <div className="flex justify-end mt-2">
-            <Link
-              href={
-                project.url.startsWith("http")
-                  ? project.url
-                  : `https://${project.url}`
-              }
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-sm font-bold text-green-600 hover:text-green-800 transition-colors"
-            >
-              View Link →
-            </Link>
-          </div>
-        )}
-      </div>
+<div className="p-4 flex flex-col h-32">
+  <h3 className="text-xl font-bold text-blue-950 mb-1 line-clamp-1 group-hover:text-green-700 transition-colors duration-200">
+    {project.title}
+  </h3>
+  <p className="text-sm text-gray-600 line-clamp-2 leading-relaxed flex-grow">
+              <div
+  className="
+    prose prose-sm max-w-none text-justify
+    [&_p]:mb-3 [&_p]:leading-relaxed [&_p]:text-[15px] [&_p]:text-gray-600
+    [&_ul]:list-disc [&_ul]:ml-5 [&_ul]:space-y-1
+    [&_ol]:list-decimal [&_ol]:ml-5 [&_ol]:space-y-1
+    [&_li]:text-gray-600 [&_li]:text-[15px]
+    [&_h4]:font-bold [&_h4]:text-blue-900 [&_h4]:mb-2 [&_h4]:mt-4
+    [&_b]:text-gray-800 [&_strong]:text-gray-800
+    [&_i]:italic [&_em]:italic
+  "
+  dangerouslySetInnerHTML={{ __html: project.description ?? "" }}
+/>
+  </p>
+
+  {/* Buttons Container */}
+  <div className="flex justify-between items-center mt-2">
+    <Link
+  // Title लाई URL-friendly बनाउन encodeURIComponent प्रयोग गर्नुहोस्
+  href={`/projects/${encodeURIComponent(project.title.toLowerCase().replace(/\s+/g, '-'))}`}
+  className="text-sm font-bold text-blue-600 hover:underline transition-colors"
+>
+  See More
+</Link>
+
+    {/* View Link (External) */}
+    {project.url && (
+      <a
+        href={project.url.startsWith("http") ? project.url : `https://${project.url}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-sm font-bold text-green-600 hover:underline transition-colors"
+      >
+        View Link →
+      </a>
+    )}
+  </div>
+</div>
     </motion.div>
   );
 }

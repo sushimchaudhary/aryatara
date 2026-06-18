@@ -108,7 +108,7 @@ const MENU_GROUPS: MenuGroup[] = [
       { icon: Building2, labelKey: "Organizations", href: "/cms/organizations" },
       { icon: MessageSquareText, labelKey: "Contact List", href: "/cms/contacts" },
       { icon: FileText, labelKey: "Legal Docs", href: "/cms/legal-docs" },
-      { icon: UserCog, labelKey: "User Management", href: "/cms/users" },
+      // { icon: UserCog, labelKey: "User Management", href: "/cms/users" },
     ],
   },
 ];

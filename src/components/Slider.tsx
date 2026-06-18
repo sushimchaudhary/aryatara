@@ -4,7 +4,7 @@ import { useEffect, useState, useRef, useCallback } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
-import { SliderServices } from "@/services/sliderServices";
+import { GalleryServices } from "@/services/galleryServices";
 
 
 interface GalleryItem {
@@ -41,7 +41,7 @@ export default function SliderCoverflow() {
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
-    SliderServices.getDetails()
+    GalleryServices.getDetails()
       .then((data) => setItems(Array.isArray(data) ? data : []))
       .catch(() => setItems([]))
       .finally(() => setLoading(false));

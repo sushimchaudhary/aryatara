@@ -30,6 +30,12 @@ interface ApplicationForm {
   short_description: string;
 }
 
+
+// ── Strip HTML tags → plain text for table preview ────────────────────────────
+function stripHtml(html: string): string {
+  if (!html) return "";
+  return html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+}
 // ── Skeleton ──────────────────────────────────────────────────────────────────
 function JobSkeleton() {
   return (
@@ -74,7 +80,7 @@ function JobCard({
       className="group bg-white rounded-lg border border-gray-100 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden flex flex-col"
     >
       <div className="h-1 w-full bg-gradient-to-r from-green-500 to-emerald-400" />
-      <div className="p-6 flex flex-col gap-4 flex-1">
+      <div className="p-3 flex flex-col gap-4 flex-1">
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded bg-green-50 border border-green-100 flex items-center justify-center shrink-0">
@@ -98,20 +104,43 @@ function JobCard({
         </div>
 
         <p className="text-[13px] text-gray-500 leading-relaxed line-clamp-3 flex-1">
-          {job.description}
+         <div
+  className="
+    prose prose-sm max-w-none text-justify
+    [&_p]:mb-3 [&_p]:leading-relaxed [&_p]:text-[15px] [&_p]:text-gray-600
+    [&_ul]:list-disc [&_ul]:ml-5 [&_ul]:space-y-1
+    [&_ol]:list-decimal [&_ol]:ml-5 [&_ol]:space-y-1
+    [&_li]:text-gray-600 [&_li]:text-[15px]
+    [&_h4]:font-bold [&_h4]:text-blue-900 [&_h4]:mb-2 [&_h4]:mt-4
+    [&_b]:text-gray-800 [&_strong]:text-gray-800
+    [&_i]:italic [&_em]:italic
+  "
+  dangerouslySetInnerHTML={{ __html: job.description ?? "" }}
+/>
         </p>
 
         <div className="border-t border-gray-50" />
 
-        <motion.button
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.97 }}
-          onClick={() => onApply(job)}
-          className="w-full bg-green-600 hover:bg-green-700 text-white py-2.5 rounded text-sm font-bold transition-colors shadow-sm shadow-green-200 flex items-center justify-center gap-2"
-        >
-          <Send size={14} />
-          Apply Now
-        </motion.button>
+        {/* ── Two-button row ── */}
+        <div className="flex gap-2">
+          <Link
+            href={`/career/${job.slug}`}
+            className="flex-1 border border-green-600 text-green-700 hover:bg-green-50 py-1.5 rounded text-sm font-bold transition-colors flex items-center justify-center gap-2"
+          >
+            <FileText size={14} />
+            View Details
+          </Link>
+
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.97 }}
+            onClick={() => onApply(job)}
+            className="flex-1 bg-green-600 hover:bg-green-700 text-white py-1.5 rounded text-sm font-bold transition-colors shadow-sm shadow-green-200 flex items-center justify-center gap-2"
+          >
+            <Send size={14} />
+            Apply Now
+          </motion.button>
+        </div>
       </div>
     </motion.div>
   );

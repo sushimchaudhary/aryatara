@@ -1,4 +1,3 @@
-// ─── ProjectForm.tsx ───────────────────────────────────────────────────────
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import { useForm, Controller } from "react-hook-form";
@@ -11,6 +10,7 @@ import { CancelButton } from "@/components/ui/CancleButton";
 import { useTheme } from "@/lib/context/ThemeContext";
 import { toast } from "sonner";
 import { ProjectsServices } from "@/services/projectsServices";
+import CKEditorField from "@/components/CkEditorfield";
 
 export function ProjectForm({ initialData, onSuccess, onClose, isOpen }: any) {
   const { primaryColor } = useTheme();
@@ -18,9 +18,11 @@ export function ProjectForm({ initialData, onSuccess, onClose, isOpen }: any) {
   const [loading, setLoading] = useState(false);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
   const form = useForm({
-    defaultValues: { title: "", description: "",url: "", image: null as any },
+    defaultValues: { title: "", description: "", url: "", image: null as any },
   });
+
   const handleClose = () => {
     form.reset();
     setImagePreview(null);
@@ -34,12 +36,12 @@ export function ProjectForm({ initialData, onSuccess, onClose, isOpen }: any) {
         form.reset({
           title: initialData.title || "",
           description: initialData.description || "",
-          url: initialData.url || "" ,
+          url: initialData.url || "",
           image: null,
         });
       } else {
         setImagePreview(null);
-        form.reset({ title: "", description: "",url: "", image: null });
+        form.reset({ title: "", description: "", url: "", image: null });
       }
     }
   }, [initialData, isOpen]);
@@ -80,18 +82,26 @@ export function ProjectForm({ initialData, onSuccess, onClose, isOpen }: any) {
 
   return (
     <>
+      {/* Backdrop */}
       <div
         onClick={handleClose}
-        className={`fixed inset-0 z-[100] bg-slate-900/40 backdrop-blur-sm transition-opacity duration-300 ${isOpen ? "opacity-100 visible" : "opacity-0 invisible"}`}
+        className={`fixed inset-0 z-[100] bg-slate-900/40 backdrop-blur-sm transition-opacity duration-300 ${
+          isOpen ? "opacity-100 visible" : "opacity-0 invisible"
+        }`}
       />
+
+      {/* Modal */}
       <div
-        className={`fixed inset-0 z-[101] flex items-center justify-center p-4 transition-all duration-300 ${isOpen ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"}`}
+        className={`fixed inset-0 z-[101] flex items-center justify-center p-4 transition-all duration-300 ${
+          isOpen ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"
+        }`}
       >
-        <div className="w-full max-w-lg bg-white rounded shadow-md border border-gray-200 overflow-hidden font-mukta">
+        <div className="w-full max-w-2xl bg-white rounded shadow-md border border-gray-200 overflow-hidden font-mukta max-h-[92vh] flex flex-col">
           <ConfigProvider
             theme={{ token: { colorPrimary: primaryColor, borderRadius: 4 } }}
           >
-            <div className="bg-white px-4 py-3 border-b border-gray-100 flex justify-between items-center">
+            {/* Header */}
+            <div className="bg-white px-4 py-3 border-b border-gray-100 flex justify-between items-center flex-shrink-0">
               <h2 className="text-sm font-bold text-gray-800 flex items-center gap-2">
                 <FolderKanban size={15} style={{ color: primaryColor }} />
                 {isUpdate ? "Edit Project" : "New Project"}
@@ -103,108 +113,109 @@ export function ProjectForm({ initialData, onSuccess, onClose, isOpen }: any) {
                 <X size={20} />
               </button>
             </div>
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="px-6 py-4 space-y-2"
-              >
-                <div className="flex flex-col items-center pb-3 border-b border-dashed border-gray-200">
-                  <div
-                    onClick={() => fileInputRef.current?.click()}
-                    className="w-full h-36 rounded border-2 border-dashed flex items-center justify-center overflow-hidden bg-gray-50 cursor-pointer hover:bg-gray-100 transition-all"
-                    style={{
-                      borderColor: imagePreview ? primaryColor : "#e5e7eb",
-                    }}
-                  >
-                    {imagePreview ? (
-                      <img
-                        src={imagePreview}
-                        alt="Preview"
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <div className="flex flex-col items-center gap-2 text-gray-300">
-                        <Camera size={32} />
-                        <span className="text-[11px] font-bold uppercase">
-                          Click to upload image
-                        </span>
-                        <p className="text-[11px] text-gray-400 mt-2 font-bold uppercase">
-                          Project image (Max 5MB)
-                        </p>
-                      </div>
-                    )}
+
+            {/* Scrollable body */}
+            <div className="overflow-y-auto flex-1 scrollbar-hide">
+              <Form {...form}>
+                <form
+                  onSubmit={form.handleSubmit(onSubmit)}
+                  className="px-6 py-4 space-y-4"
+                >
+                  {/* Image upload */}
+                  <div className="flex flex-col items-center pb-3 border-b border-dashed border-gray-200">
+                    <div
+                      onClick={() => fileInputRef.current?.click()}
+                      className="w-full h-36 rounded border-2 border-dashed flex items-center justify-center overflow-hidden bg-gray-50 cursor-pointer hover:bg-gray-100 transition-all"
+                      style={{ borderColor: imagePreview ? primaryColor : "#e5e7eb" }}
+                    >
+                      {imagePreview ? (
+                        <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
+                      ) : (
+                        <div className="flex flex-col items-center gap-2 text-gray-300">
+                          <Camera size={32} />
+                          <span className="text-[11px] font-bold uppercase">Click to upload image</span>
+                          <p className="text-[11px] text-gray-400 mt-2 font-bold uppercase">
+                            Project image (Max 5MB)
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                    <input
+                      type="file"
+                      ref={fileInputRef}
+                      className="hidden"
+                      accept="image/*"
+                      onChange={handleFileChange}
+                    />
                   </div>
-                  <input
-                    type="file"
-                    ref={fileInputRef}
-                    className="hidden"
-                    accept="image/*"
-                    onChange={handleFileChange}
+
+                  {/* Title */}
+                  <Controller
+                    control={form.control}
+                    name="title"
+                    render={({ field }) => (
+                      <FormItem>
+                        <ThemedInput
+                          label="Project Title"
+                          icon={<FolderKanban size={12} />}
+                          placeholder="Enter project title"
+                          {...field}
+                        />
+                        <FormMessage className="text-[10px]" />
+                      </FormItem>
+                    )}
                   />
-                </div>
-                <Controller
-                  control={form.control}
-                  name="title"
-                  render={({ field }) => (
-                    <FormItem>
-                      <ThemedInput
-                        label="Project Title"
-                        icon={<FolderKanban size={12} />}
-                        placeholder="Enter project title"
-                        {...field}
-                      />
-                      <FormMessage className="text-[10px]" />
-                    </FormItem>
-                  )}
-                />
-                <div className="w-full space-y-1">
-                  <label className="text-[11px] font-medium text-gray-400 block">
-                    Description
-                  </label>
+
+                  {/* Description — CKEditor */}
                   <Controller
                     control={form.control}
                     name="description"
-                    render={({ field }) => (
-                      <textarea
-                        {...field}
-                        rows={4}
+                    render={({ field, fieldState }) => (
+                      <CKEditorField
+                        label="Description"
+                        value={field.value}
+                        onChange={field.onChange}
                         placeholder="Project description..."
-                        className="w-full rounded border border-gray-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-1 resize-none"
+                        height={240}
+                        error={fieldState.error?.message}
                       />
                     )}
                   />
-                </div>
 
-                <Controller
-  control={form.control}
-  name="url"
-  render={({ field }) => (
-    <FormItem>
-      <ThemedInput
-        label="Project URL"
-        icon={<FileText size={12} />} 
-        placeholder="https://example.com"
-        {...field}
-      />
-      <FormMessage className="text-[10px]" />
-    </FormItem>
-  )}
-/>
-                <div className="flex justify-end gap-3 pt-2 border-t border-gray-100">
-                  <CancelButton onClick={handleClose} disabled={loading} />
-                  <ThemedButton type="submit" size="sm" disabled={loading}>
-                    <div className="flex items-center gap-2">
-                      {loading ? (
-                        <Loader2 size={12} className="animate-spin" />
-                      ) : (
-                        <Save size={12} />
-                      )}
-                      <span>{isUpdate ? "Update" : "Create"}</span>
-                    </div>
-                  </ThemedButton>
-                </div>
-              </form>
-            </Form>
+                  {/* URL */}
+                  <Controller
+                    control={form.control}
+                    name="url"
+                    render={({ field }) => (
+                      <FormItem>
+                        <ThemedInput
+                          label="Project URL"
+                          icon={<FileText size={12} />}
+                          placeholder="https://example.com"
+                          {...field}
+                        />
+                        <FormMessage className="text-[10px]" />
+                      </FormItem>
+                    )}
+                  />
+
+                  {/* Footer */}
+                  <div className="flex justify-end gap-3 pt-2 border-t border-gray-100 sticky bottom-0 bg-white pb-1">
+                    <CancelButton onClick={handleClose} disabled={loading} />
+                    <ThemedButton type="submit" size="sm" disabled={loading}>
+                      <div className="flex items-center gap-2">
+                        {loading ? (
+                          <Loader2 size={12} className="animate-spin" />
+                        ) : (
+                          <Save size={12} />
+                        )}
+                        <span>{isUpdate ? "Update" : "Create"}</span>
+                      </div>
+                    </ThemedButton>
+                  </div>
+                </form>
+              </Form>
+            </div>
           </ConfigProvider>
         </div>
       </div>
