@@ -8,7 +8,7 @@ import SliderCoverflow from "@/components/Slider";
 
 export default function LandingPage() {
   return (
-    <main className="overflow-x-hidden">
+    <main >
       {/* 1. First Impression: Clear and Bold */}
       <HeroBanner />
 
