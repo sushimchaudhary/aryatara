@@ -5,7 +5,6 @@ import { ThemedButton } from "@/components/ui/themedButton";
 import { ThemedInput } from "@/components/ui/ThemedInput";
 import { PageHeader } from "@/components/dashboard/PageHeader";
 import JobApplicationTable from "@/components/dashboard/job/jobApplicationTable";
-import { JobApplicationForm } from "@/components/dashboard/job/jobApplicationForm";
 
 export default function JobApplicationPage() {
   const [isOpen, setIsOpen] = useState(false);
@@ -55,12 +54,6 @@ export default function JobApplicationPage() {
         searchQuery={searchQuery}
       />
 
-      <JobApplicationForm
-        isOpen={isOpen}
-        initialData={editData}
-        onClose={handleClose}
-        onSuccess={handleSuccess}
-      />
     </div>
   );
 }

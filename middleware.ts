@@ -23,7 +23,7 @@ export function middleware(request: NextRequest) {
 
   // यदि टोकन छ तर प्रयोगकर्ता login पेजमै छ भने
   if (isPublicRoute) {
-    return NextResponse.redirect(new URL('/dashboard', request.url));
+    return NextResponse.redirect(new URL('/cms', request.url));
   }
 
   return NextResponse.next();

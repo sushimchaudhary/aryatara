@@ -37,7 +37,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, [getLoggedInUser]);
 
   const login = async (credentials: ICredentials): Promise<IUser | void> => {
-    const res = await axiosInstance.post("/auth/login/", {
+    const res = await axiosInstance.post("/login/", {
       identifier: credentials.identifier, // Changed from username to identifier
       password: credentials.password,
     });

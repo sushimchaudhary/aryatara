@@ -101,16 +101,16 @@ export const JobServices = {
 
 // Job Applications
 export const JobApplicationServices = {
-  getDetails: async (args?: GetDetailsArgs | string, oldParams?: any) => {
-    let url = "/job-applications/";
+  getApplications: async (args?: GetDetailsArgs | string, oldParams?: any) => {
+    let url = "/applications/";
     let queryParams = {};
 
     if (typeof args === "string") {
-      url = `/job-applications/${args}/`;
+      url = `/applications/${args}/`;
       queryParams = oldParams || {};
     } else if (args && typeof args === "object") {
       const { id, ...rest } = args;
-      if (id) url = `/job-applications/${id}/`;
+      if (id) url = `/applications/${id}/`;
       queryParams = rest;
     }
 
@@ -119,14 +119,14 @@ export const JobApplicationServices = {
   },
 
   submitApplication: async (data: FormData) => {
-    const res = await axiosInstance.post("/job-applications/", data, {
+    const res = await axiosInstance.post("/applications/", data, {
       headers: { "Content-Type": "multipart/form-data" },
     });
     return res.data;
   },
 
-  deleteDetails: async (id: string) => {
-    const res = await axiosInstance.delete(`/job-applications/${id}/`);
+  deleteApplications: async (id: string) => {
+    const res = await axiosInstance.delete(`/applications/${id}/`);
     return res.data;
   },
 };
