@@ -36,12 +36,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     getLoggedInUser();
   }, [getLoggedInUser]);
 
-  const login = async (credentials: ICredentials): Promise<IUser | void> => {
-    const res = await axiosInstance.post("/login/", {
-      identifier: credentials.identifier, // Changed from username to identifier
-      password: credentials.password,
+ const login = async (credentials: ICredentials) => {
+    const res = await axiosInstance.post("/auth/login/", {
+      identifier: credentials.username,
+      password:   credentials.password,
     });
-
     const data = res.data;
 
     if (data.access) Cookies.set("access_token", data.access, { expires: 7 });
