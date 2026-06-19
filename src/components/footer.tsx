@@ -42,7 +42,7 @@ export default function Footer() {
   return (
     <div className="w-full mx-auto">
       <footer className="bg-[#007f35] text-white pt-12 pb-6 px-4 md:px-12">
-<div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 mb-12">
+       <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 mb-12">
           {/* ── Organization info ── */}
           <div className="col-span-2 lg:col-span-1 space-y-4">
             <h2 className="text-2xl font-bold">
@@ -85,7 +85,7 @@ export default function Footer() {
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Quick Links</h3>
             <ul className="space-y-2 text-sm">
-              {["About Us", "Contact Us", "Teams"].map((link) => (
+              {["About Us", "Contact Us", "Teams", "Projects", "Career", "Legal Docs"].map((link) => (
                 <li key={link}>
                   <Link
                     href={`/${link.toLowerCase().replace(" ", "-")}`}
