@@ -13,10 +13,9 @@ interface GetDetailsArgs {
 
 export const UserServices = {
 
-
-  login: async (credentials: { identifier: string; password: string }) => {
+   login: async (credentials: any) => {
     const response = await axiosInstance.post("/auth/login/", {
-      email: credentials.identifier,
+      identifier: credentials.username,
       password: credentials.password,
     });
     return response.data;
@@ -56,8 +55,6 @@ export const UserServices = {
     const res = await axiosInstance.get(url, { params: queryParams });
     return res.data;
   },
-
- 
 
   clearCache: () => {
     userCache = null;

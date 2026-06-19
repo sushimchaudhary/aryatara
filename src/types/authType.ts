@@ -1,17 +1,14 @@
 import * as z from "zod";
 
-// Login को लागि data structure
 export interface ICredentials {
-  identifier: string; // यहाँ username वा email दुवै आउँछ
+  username: string;
   password: string;
-  remember?: boolean;
 }
 
-// Zod validation (Frontend validation को लागि)
 export const LoginDTO = z.object({
-  identifier: z.string().min(1, "Email or Username is required"),
-  password: z.string().min(1, "Password is required"),
-  remember: z.boolean().optional(),
+  username: z.string().nonempty("Username is required"),
+  password: z.string().nonempty("Password is required"),
+  remember: z.boolean().optional()
 });
 
 // User को profile data (तपाईंको Model अनुसार)
